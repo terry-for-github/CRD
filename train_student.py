@@ -8,12 +8,14 @@ import os
 import argparse
 import socket
 import time
+import random
 
 import tensorboard_logger as tb_logger
 import torch
 import torch.optim as optim
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
+import numpy as np
 
 
 from models import model_dict
@@ -30,6 +32,13 @@ from crd.criterion import CRDLoss
 
 from helper.loops import train_distill as train, validate
 from helper.pretrain import init
+
+
+def setup_seed(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
 
 
 def parse_option():
@@ -145,6 +154,7 @@ def main():
 
     opt = parse_option()
 
+    setup_seed(int(opt.trial))
     # tensorboard logger
     logger = tb_logger.Logger(logdir=opt.tb_folder, flush_secs=2)
 
