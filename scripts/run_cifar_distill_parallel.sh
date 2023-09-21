@@ -47,7 +47,7 @@ for i in ${struct_list[@]} ; do
             if [[ $name = "kd" ]] ; then
                 r=${para[4]}
                 dir=$log_dir/${name}_a${a}_b${b}_r${r}
-                gpu=`python scripts/get_gpu.py -n='wait' -t=60`
+                gpu=`python scripts/get_gpu.py -n=${name}_${ts_pair}_$t -t=60`
                 # echo "                $gpu $ts_pair $name $a $b $r $t"
                 if [ ! -d $dir ] ; then mkdir -p $dir ; fi
                 CUDA_VISIBLE_DEVICES=$gpu python train_student.py --path_t $teacher_path --distill $name --model_s $student_arch -a $a -b $b -r $r --trial $t > $dir/$t.log &
@@ -55,7 +55,7 @@ for i in ${struct_list[@]} ; do
                 continue
             fi
             dir=$log_dir/${name}_a${a}_b${b}
-            gpu=`python scripts/get_gpu.py -n='wait' -t=60`
+            gpu=`python scripts/get_gpu.py -n=${name}_${ts_pair}_$t -t=60`
             # echo "                $gpu $ts_pair $name $a $b $t"
             if [ ! -d $dir ] ; then mkdir -p $dir ; fi
             CUDA_VISIBLE_DEVICES=$gpu python train_student.py --path_t $teacher_path --distill $name --model_s $student_arch -a $a -b $b --trial $t > $dir/$t.log &
