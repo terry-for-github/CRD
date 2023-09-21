@@ -25,14 +25,18 @@ NST=(false nst 0 50)
 CRD=(true crd 0 0.8)
 CRKD=(true crd 1 0.8)
 
-for i in $@ ; do
+struct_list=($1)
+seed_list=($2)
+
+
+for i in ${struct_list[@]} ; do
     teacher_arch=${TEACHER_ARCHS[$i]}
     student_arch=${STUDENT_ARCHS[$i]}
     teacher_path=/userhome/download/${teacher_arch}_vanilla/ckpt_epoch_240.pth
     ts_pair=${teacher_arch}-${student_arch}
     log_dir=save/logs/${DATASET}-${ts_pair}
 
-    for t in 0 1 25 42 53; do
+    for t in ${seed_list[@]}; do
         for alg in KD HINT AT SP CC VID RKD PKT AB FT FSP CRD CRKD ; do
             eval "para=(\${$alg[@]})"
             is_enable=${para[0]}
